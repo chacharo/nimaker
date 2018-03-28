@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="3D打印后台管理系统管理界面">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="/stylesheets/camera.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+    <script src="/stylesheets/bootstrap.min.js"></script>
+    <script src="/stylesheets/camera.js"></script>
+    <title>PrinterLinkCamera</title>
+</head>
+<body>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">打印机管理</a>
+        </div>
+        <div>
+            <button type="button" class="btn btn-default navbar-btn" data-toggle="modal" data-target="#addModal">
+                添加打印机
+            </button>
+            <button id="returnBtn" type="button" class="btn btn-default">返回模型管理</button>
+
+        </div>
+    </div>
+
+
+</nav>
+<div id="tableBox"></div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    添加新的打印机
+                </h4>
+            </div>
+            <form role="form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">打印机序列号</label>
+                        <input type="text" class="form-control" id="printName" placeholder="请输入打印机序列号" required>
+                        <label for="name">摄像头序列号</label>
+                        <input type="text" class="form-control" id="cameraId" placeholder="请输入摄像头序列号" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="submit" id="add-confirm-btn" class="btn btn-primary">
+                        添加
+                    </button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="modifyModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    修改打印机配置
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="name">打印机序列号</label>
+                        <input type="text" class="form-control" id="printNameM" readonly="readonly" required>
+                        <label for="name">摄像头序列号</label>
+                        <input type="text" class="form-control" id="cameraIdM" placeholder="请输入摄像头序列号" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" id="modify-confirm-btn" class="btn btn-primary">
+                    修改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="confirmModalLabel">
+                    确认删除
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form role="form">
+                    <div class="form-group">
+                        <h3>确认删除本台打印机？此操作不能撤回</h3>
+                        <label for="name">打印机序列号</label>
+                        <input type="text" class="form-control" id="printNameC" readonly="readonly" required>
+                        <label for="name">摄像头序列号</label>
+                        <input type="text" class="form-control" id="cameraIdC" readonly="readonly" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" id="delete-confirm-btn" class="btn btn-primary">
+                    删除
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+</body>
+</html>

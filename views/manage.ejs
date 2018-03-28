@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>3D打印后台管理系统管理界面</title>
+    <meta name="description" content="3D打印后台管理系统管理界面">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/manage_style.css"/>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdn.bootcss.com/jquery.blockUI/2.70.0-2014.11.23/jquery.blockUI.min.js"></script>
+    <script src="/stylesheets/bootstrap.min.js"></script>
+    <script src="/stylesheets/ThirdMenuControl.js"></script>
+    <script src="https://unpkg.com/leancloud-storage@3.0.4/dist/av-min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#add-category-icon").css("cursor", "pointer").click(function () {
+                $("#add-category :text").val("");
+                $.blockUI({
+                    message: $('#add-category'),
+                    css: {
+                        top: "30%"
+                    }
+                });
+            });
+
+            $("#mod-category-link").css("cursor", "pointer").click(function () {
+                <% if (category_list.length > 0) { %>
+                $("#mod-category [name='name']").val("<%= category_list[category_index].get('name') %>");
+                $("#mod-category [name='description']").val("<%= category_list[category_index].get('description') %>");
+                <% } %>
+                $.blockUI({
+                    message: $('#mod-category'),
+                    css: {
+                        top: "30%"
+                    }
+                });
+            });
+
+
+            $("#add-model-icon").css("cursor", "pointer").click(function () {
+                $("#add-model :text").val("");
+                $("#add-model :file").val("");
+                $("#add-model [type='number']").val("");
+                $("#upload-thumbnail-image").attr("src", "/images/uploadPhotos.png");
+                $.blockUI({
+                    message: $('#add-model'),
+                    css: {
+                        width: "420px",
+                        top: "10%"
+                    }
+                });
+            });
+
+            //侧边栏控制代码
+
+
+            $(".modify-icon").css("cursor", "pointer").click(function () {
+                <% if (model_list.length > 0) { %>
+                $("#mod-model [name='name']").val("<%= model_list[model_index].get('name') %>");
+                $("#mod-model [name='note']").val("<%= model_list[model_index].get('note') %>");
+                $("#mod-model [name='time_cost']").val("<%= model_list[model_index].get('time_cost') %>");
+                $("#mod-model [name='material_cost']").val("<%= model_list[model_index].get('material_cost') %>");
+                $("#mod-model [name='width']").val("<%= model_list[model_index].get('width') %>");
+                $("#mod-model [name='depth']").val("<%= model_list[model_index].get('depth') %>");
+                $("#mod-model [name='height']").val("<%= model_list[model_index].get('height') %>");
+                <% } %>
+
+                $.blockUI({
+                    message: $('#mod-model'),
+                    css: {
+                        width: "420px",
+                        top: "20%"
+                    }
+                });
+            });
+
+
+            // 取消按钮
+            $(".cancel").click(function () {
+                $.unblockUI();
+            });
+
+
+            // 删除类别确认
+            $(".rm-category-icon").css("cursor", "pointer").click(function () {
+                var link = $(this).attr("link");
+
+                $("#rm-confirm-dialog .dialog-header text").html("删除类别");
+                $("#rm-confirm-dialog #dialog-info text").html("请问您确定要删除这个类别吗？");
+                $("#rm-confirm-dialog #dialog-info a").attr("href", link);
+                $("#rm-confirm-dialog #dialog-info").css({
+                    "padding": "0px"
+                });
+                $("#rm-confirm-dialog img").hide();
+                $.blockUI({
+                    message: $('#rm-confirm-dialog'),
+                    css: {
+                        height: "150px",
+                        width: "400px",
+                        top: "30%"
+                    }
+                });
+            });
+
+
+            // 删除模型文件确认
+            $(".rm-model-icon").css("cursor", "pointer").click(function () {
+                var link = $(this).attr("link");
+                var src = $(this).attr("src");
+
+                $("#rm-confirm-dialog .dialog-header text").html("删除模型")
+                $("#rm-confirm-dialog img").attr("src", src);
+                $("#rm-confirm-dialog #dialog-info text").html("请问您确定要删除这个模型吗？");
+                $("#rm-confirm-dialog #dialog-info a").attr("href", link);
+                $("#rm-confirm-dialog #dialog-info").css({
+                    "padding-top": "20px"
+                });
+                $.blockUI({
+                    message: $('#rm-confirm-dialog'),
+                    css: {
+                        width: "450px",
+                        top: "30%"
+                    }
+                });
+            });
+
+            // 删除照片确认
+            $(".rm-photo-icon").css("cursor", "pointer").click(function () {
+                var link = $(this).attr("link");
+                var src = $(this).attr("src");
+
+                $("#rm-confirm-dialog .dialog-header text").html("删除照片")
+                $("#rm-confirm-dialog img").attr("src", src);
+                $("#rm-confirm-dialog #dialog-info text").html("请问您确定要删除这张照片吗？");
+                $("#rm-confirm-dialog #dialog-info a").attr("href", link);
+                $("#rm-confirm-dialog #dialog-info").css({
+                    "padding-top": "20px"
+                });
+                $.blockUI({
+                    message: $('#rm-confirm-dialog'),
+                    css: {
+                        width: "450px",
+                        top: "30%"
+                    }
+                });
+            });
+
+
+            // 鼠标进入模型文件区域
+            $(".model-item").mouseenter(function () {
+                if ($(this).attr("order") != <%= model_index %>) {
+                    $(this).find(".model-content").css("background-color", "#BAD8E7");
+                    $(this).find(".delete-icon").fadeIn();
+                    $(this).find(".delete-icon").attr("display", "block");
+                    $("a").css("text-decoration", "none");
+                    $("tr").css("text-decoration", "none");
+                }
+            });
+            // 鼠标离开模型文件区域
+            $(".model-item").mouseleave(function () {
+                if ($(this).attr("order") != <%= model_index %>) {
+                    $(this).find(".model-content").css("background-color", "#EEF5F9");
+                    $(this).find(".delete-icon").fadeOut();
+                    $("a").css("text-decoration", "none");
+                    $("tr").css("text-decoration", "none");
+
+                }
+            });
+            $("#upload-thumbnail-input").change(function () {
+                var reader = new FileReader();
+                var file = document.getElementById("upload-thumbnail-input").files[0];
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+                reader.onload = function (e) {
+                    $("#upload-thumbnail-image").attr("src", this.result);
+                }
+            });
+            $("#addthumbnail").change(function () {
+                var reader = new FileReader();
+                var file = document.getElementById("addthumbnail").files[0];
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+                reader.onload = function (e) {
+                    $("#add-thumbnail-image").attr("src", this.result);
+                }
+            });
+
+            $("#upload-description-input").change(function () {
+                var reader = new FileReader();
+                var file = document.getElementById("upload-description-input").files[0];
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+                reader.onload = function (e) {
+                    $("#upload-description-image").attr("src", this.result);
+                }
+            });
+            $(".description-photo").css("cursor", "pointer").click(function () {
+                $("#full-image img").attr("src", $(this).attr("src"));
+                $.blockUI({
+                    message: $('#full-image'),
+                    css: {
+                        "top": "10%",
+                        "left": "20%",
+                        "height": "0px",
+                        "width": "0px"
+                    }
+                });
+            });
+            $("#full-image").click(function () {
+                $.unblockUI();
+            });
+        });
+    </script>
+</head>
+
+
+<body>
+
+<div class="header">
+    <text> 3D打印后台管理系统</text>
+    <div id="pageBox">
+        <a href="/manage/models/userSpace">
+            <button type="button" class="btn btn-default btn-lg" style="color: #0e4d83">个人空间管理</button>
+        </a>
+
+        <a id="cameraInput" href="/manage/models/camera">
+            <button type="button" class="btn btn-default btn-lg" style="color: #0e4d83">摄像头绑定管理</button>
+        </a>
+
+
+    </div>
+</div>
+
+<div class="main-interface">
+    <div id="left">
+        <div id="user-info">
+            <text style="font-size: 32px">小班打印</text>
+            <br>
+            <text style="font-size: 16px"><%= user %></text>
+            <br>
+            <text style="font-size: 16px">管理员</text>
+            <a href="/users/logout" style="float: right">登出</a>
+        </div>
+
+        <div id="category-list">
+
+            <a href="/manage/world/0">
+                <button id="model_world_btn" class="btn btn-info">模型天地</button>
+            </a>
+            <a href="/manage/world/1">
+                <button id="edu_world_btn" class="btn btn-default">教育专区</button>
+            </a>
+
+            <ul>
+                <% if (category_list.length > 0) { %>
+                <% for(var i = 0; i < category_list.length; i++) { %>
+                <li class=category-item>
+                    <% if (i == category_index) { %>
+                    <a href="/manage/<%= i %>" style="background-color: #61809E;">
+                        <img src="/images/categoryIcon.png">
+                        <text style="padding-left: 39px;"> <%= category_list[i].get('description') %> </text>
+                    </a>
+                    <% } else { %>
+                    <a href="/manage/<%= i %>">
+                        <img src="/images/categoryIcon.png">
+                        <text style="padding-left: 23px;"> <%= category_list[i].get('description') %> </text>
+                    </a>
+                    <% } %>
+                </li>
+                <% } %>
+                <% } %>
+            </ul>
+        </div>
+        <div style="margin: 10px;">
+            <img src="/images/addNew.png" id="add-category-icon" style="float: right">
+        </div>
+    </div>
+
+    <div id="model-list">
+
+        <div id=category-header>
+
+            <% if (category_list.length > 0) { %>
+            <text style="font-size: 24px; padding:0px 10px 0px 10px;">
+                <%= category_list[category_index].get('description') %>
+            </text>
+
+            <text id="mod-category-link" style="color: blue; margin: 0px 20px 0px 20px;">修改</text>
+            <text class="rm-category-icon" style="color: red; margin: 0px 20px 0px 20px;"
+                  link="/manage/<%= category_index %>/<%= model_index %>/rm-category">删除
+            </text>
+            <% if(model_list.length > 0) { %>
+            
+            <% } %>
+            <% } %>
+            <button id="arrangeBtn" type="button" class="btn btn-primary" data-toggle="tooltip" title="默认为按时间排序">按字母排序
+            </button>
+        </div>
+
+        <div id=list-interface>
+            <ul>
+                <% if (model_list.length > 0) { %>
+                    <% for (var i = 0; i < model_list.length; i++) { %>
+                    <li class="model-item " order="<%= i %>">
+                        <% if (i == model_index) { %>
+                            <% if (sort) { %>
+                                <a href="/manage?category_index=<%= category_index %>&model_index=<%= i %>&sort=true" class="model-content"
+                                    style="display: inline-block; height: 100%; flex: 1; background-color: #BAD8E7;">
+                            <% } else { %>
+                                <a href="/manage?category_index=<%= category_index %>&model_index=<%= i %>" class="model-content"
+                                    style="display: inline-block; height: 100%; flex: 1; background-color: #BAD8E7;">
+                            <% } %>
+                        <% } else { %>
+                            <% if (sort) { %>
+                                <a href="/manage?category_index=<%= category_index %>&model_index=<%= i %>&sort=true" class="model-content"
+                                    style="display: inline-block; height: 100%; flex: 1;">
+                            <% } else { %>
+                                <a href="/manage?category_index=<%= category_index %>&model_index=<%= i %>" class="model-content"
+                                    style="display: inline-block; height: 100%; flex: 1;">
+                            <% } %>
+                        <% } %>
+                        <% if (model_list[i].get('thumbnail') == undefined){ %>
+                            <img src="/images/pic.png" style="float: left">
+                        <% }else { %>
+                            <img src="<%= model_list[i].get('thumbnail').url %>" style="float: left;width: ">
+                        <% } %>
+                            <table style="padding-left: 10px;">
+                                <tr>
+                                    <td><%= model_list[i].get('name') %></td>
+                                </tr>
+                                <tr>
+                                    <td><%= model_list[i].get('createdAt').toLocaleString() %></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <% if (i == model_index) { %>
+                                        <img class="downImg " id="downImg<%= i %>" data-toggle="collapse"
+                                             data-parent="#accordion" href="#collapse<%= i %>"
+                                             src="/images/low.png"
+                                             style="margin-left: 5px; height: 20px;width: 20px;display: block;cursor: pointer">
+                                        <% }else{ %>
+                                        <img class="downImg" id="downImg<%= i %>" data-toggle="collapse"
+                                             data-parent="#accordion" href="#collapse<%= i %>"
+                                             src="/images/low.png"
+                                             style="margin-left: 5px; height: 20px;width: 20px;display: none;cursor: pointer">
+                                        <% } %>
+                                    </td>
+                                </tr>
+                            </table>
+                            </a>
+                        <% if (i == model_index) { %>
+                            <text class="modify-icon">修改</text>
+                        <% } %>
+                        <% if(model_list[i].get('thumbnail') == undefined){ %>
+                            <text class="rm-model-icon" link="/manage/<%= category_index %>/<%= i %>/rm-model"
+                                  src="/images/pic.png">删除
+                            </text>
+                        <% }else{ %>
+                            <text class="rm-model-icon" link="/manage/<%= category_index %>/<%= i %>/rm-model"
+                                src="<%= model_list[i].get('thumbnail').url %>">删除
+                        </text>
+                    <% } %>
+                </li>
+                    <div id="collapse<%= i %>" class="panel-collapse collapse">
+                        <p id="sonP<%= i %>"></p>
+                    </div>
+                <% } %>
+            <% } %>
+        </ul>
+    </div>
+
+        <div style="margin: 10px;">
+            <img src="/images/addNew.png" id="add-model-icon" style="float: right">
+        </div>
+
+    </div>
+
+
+    <div id="model-detail">
+        <ul>
+            <% if (model_list.length > 0) { %>
+            <li class="thirdlayout">
+                <text style="text-align: center;font-size: 24px"
+                      class="model-value"><%= model_list[model_index].get('name') %>模型子部件
+                </text>
+            </li>
+
+            <li>
+                <text class="model-property">模型名称：</text>
+                <text id="conpName" class="model-value"><%= model_list[model_index].get('name') %></text>
+            </li>
+
+            <li>
+                <text class="model-property">模型说明：</text>
+                <br>
+                <text id="conpNote" class="model-value"><%= model_list[model_index].get('note') %></text>
+
+            </li>
+
+            <li id="add-comp-input">
+                <text class="model-property">添加子部件：</text>
+                <br>
+                <text class="model-value">
+                    <button id="add-modal-btn">添加子部件</button>
+                </text>
+
+            </li>
+
+            <li>
+                <text class="model-property">打印时间：</text>
+                <text id="timeCost" class="model-value">0小时</text>
+            </li>
+
+            <li>
+                <text class="model-property">耗费材料：</text>
+                <text id="materialCost" class="model-value">0克</text>
+            </li>
+            <li class="thirdlayout">
+                <text class="model-property">宽度（X）：</text>
+                <text id="conpWidth" class="model-value">mm</text>
+            </li>
+
+            <li class="thirdlayout">
+                <text class="model-property">深度（Y）：</text>
+                <text id="conpDepth" class="model-value">mm</text>
+            </li>
+
+            <li class="thirdlayout">
+                <text class="model-property">高度（Z）：</text>
+                <text id="conpHeight" class="model-value">mm</text>
+            </li>
+            <li class="thirdlayout">
+                <text class="model-property">bnst文件：</text>
+                <text class="model-value"><a id="gcodeFile" href="#" target='_Blank'>预览</a>
+                </text>
+            </li>
+
+            <li class="thirdlayout">
+                <text class="model-property">打印次数：</text>
+                <text id="printTimes" class="model-value"></text>
+            </li>
+            <li>
+                <text class="model-property">建立时间：</text>
+                <text id="createTime"
+                      class="model-value"><%= model_list[model_index].get('createdAt').toLocaleString() %></text>
+            </li>
+            <li>
+                <text class="model-property">更新时间：</text>
+                <text id="updateTime"
+                      class="model-value"><%= model_list[model_index].get('updatedAt').toLocaleString() %></text>
+            </li>
+            <li>
+                <text class="model-property">缩略图：</text>
+            </li>
+            <% if(model_list[model_index].get('thumbnail') != undefined){ %>
+                <li>
+                    <text class="model-property"><%= model_list[model_index].get('thumbnail').name %></text>
+                    <img id="conpImg" src="<%= model_list[model_index].get('thumbnail').url %>" class="description-photo">
+                </li>
+            <% }else{ %>
+                <li><img src="/images/pic.png" class="description-photo"></li>
+            <% } %>
+            <div class="description-img-box">
+                <li>
+                    <text class="model-property">描述照片：</text>
+                </li>
+                <% if(model_list[model_index].get('description') != undefined){ %>
+                <% if(model_list[model_index].get('description').length > 0) { %>
+                <% for (var i = 0; i < model_list[model_index].get('description').length; i++) { %>
+                <li>
+                    <text><%= model_list[model_index].get('description')[i].name %></text>
+                    <img src="<%= model_list[model_index].get('description')[i].url %>" class="description-photo">
+                    <text class="rm-photo-icon" style="color: red;"
+                          src="<%= model_list[model_index].get('description')[i].url %>"
+                          link="/manage/<%= category_index %>/<%= model_index %>/<%= i %>/rm-photo">删除
+                    </text>
+                </li>
+
+                <% } %>
+                <% } %>
+                <% } %>
+                <!-- <li><a href=""><img src="/images/uploadPhotos.png"></li></a> -->
+
+                <form action="/manage/<%= category_index %>/<%= model_index %>/add-photo" method="post"
+                      enctype="multipart/form-data">
+                    <input name="photo" type="file" id="upload-description-input" accept="image/png, image/jpeg"
+                           required="required">
+                    <br>
+                    <input type="submit" value="添加照片">
+                </form>
+                <img src="/images/uploadPhotos.png" id="upload-description-image"
+                     style="margin-top: 20px; width: 100px;">
+                <% } %>
+            </div>
+        </ul>
+    </div>
+
+
+    <div id="add-category">
+        <div class="dialog-header">
+            <text>添加类别</text>
+        </div>
+        <div class="dialog-content">
+            <form action="/manage/add-category" method="post">
+                <ul>
+                    <li>
+                        <text> 描述：</text>
+                        <input type="text" name="description" placeholder="参考名称" required="required"
+                               style="width: 250px;">
+                    </li>
+                    <br>
+                    <li>
+                        <input type="button" class="cancel" value="取消">
+                        <input type="submit" class="ok" value="添加">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="mod-category">
+        <div class="dialog-header">
+            <text>修改类别</text>
+        </div>
+        <div class="dialog-content">
+            <form action="/manage/<%= category_index %>/mod-category" method="post">
+                <ul>
+                    <li>
+                        <text> 名称：</text>
+                        <input type="text" name="description" placeholder="参考名称" required="required"
+                               style="width: 250px;">
+                    </li>
+                    <br>
+                    <li>
+                        <input type="button" class="cancel" value="取消">
+                        <input type="submit" class="ok" value="修改">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="add-model">
+        <div class="dialog-header">
+            <text>添加父级模型</text>
+        </div>
+
+        <div class="dialog-content">
+            <form action="/manage/add-model/<%= category_index %>" method="post" enctype="multipart/form-data">
+                <ul>
+                    <li>
+                        <text> 名称：</text>
+                        <input type="text" name="name" placeholder="参考模型" required="required" style="width: 300px;">
+                    </li>
+
+                    <li>
+                        <text> 说明：</text>
+                        <input type="text" name="note" placeholder="这是一个参考模型" style="width: 300px;">
+                    </li>
+                    <br>
+
+                    <li>
+                        <text> 缩略图：</text>
+                        <input name="thumbnail" id="upload-thumbnail-input" type="file" accept="image/png, image/jpeg"
+                               required="required">
+                        <img src="/images/uploadPhotos.png" id="upload-thumbnail-image" style="height: 72px;">
+                    </li>
+                    <br>
+                    <li>
+                        <input type="button" class="cancel" value="取消">
+                        <input type="submit" class="ok" value="添加">
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+
+    <div id="mod-model">
+        <div class="dialog-header">
+            <text>修改模型</text>
+        </div>
+        <div class="dialog-content">
+            <form action="/manage/<%= category_index %>/<%= model_index %>/mod-model" method="post">
+                <% if (model_list.length > 0) { %>
+                <ul>
+                    <li>
+                        <text> 名称：</text>
+                        <input type="text" name="name" placeholder="参考模型" required="required" style="width: 300px;">
+                    </li>
+
+                    <li>
+                        <text> 类别：</text>
+                        <select id="model-rm-sel" name="categoryValue" style="width: 300px;"></select>
+                    </li>
+
+                    <li>
+                        <text> 说明：</text>
+                        <input type="text" name="note" placeholder="这是一个参考模型" style="width: 300px;">
+                    </li>
+                    <br>
+                    <li>
+                        <text> 打印时间（小时）：</text>
+                        <input type="text" name="time_cost" min=0 pattern="[0-9]+(.[0-9]{1,3})?" required="required">
+                    </li>
+
+                    <li>
+                        <text> 耗费材料（克）：</text>
+                        <input type="text" name="material_cost" min=0 pattern="[0-9]+(.[0-9]{1,3})?"
+                               required="required">
+                    </li>
+                    <br>
+                    <li>
+                        <input type="button" class="cancel" value="取消">
+                        <input type="submit" class="ok" value="修改">
+                    </li>
+                </ul>
+                <% } %>
+            </form>
+        </div>
+    </div>
+
+
+    <div id="rm-confirm-dialog">
+        <div class="dialog-header">
+            <text></text>
+        </div>
+
+        <div class="dialog-content" style="display: flex; flex-direction: row">
+            <img src="" style="height: 96px; padding-right: 30px">
+            <div id="dialog-info" style="flex: 1;">
+                <ul>
+                    <li>
+                        <text></text>
+                    </li>
+                    <br>
+                    <li>
+                        <input type="button" class="cancel" value="取消">
+                        <a href="" class="ok">确认</a>
+                    </li>
+                </ul>
+                </form>
+            </div>
+        </div>
+
+        <div id="full-image">
+            <img src="" style="height: 100%;">
+        </div>
+    </div>
+
+    <div class="modal fade" id="comp-rm-confirm-dialog" tabindex="-1" role="dialog" aria-labelledby="compModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#375E84 ">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="compModalLabel" style="color: white;">
+                    </h4>
+                </div>
+                <div class="modal-body" style="display: flex; flex-direction: row">
+                    <img id="comp-re-img" src="" style="height: 80px;width: 100px; padding-right: 30px">
+                    <div id="dialog-info" style="flex: 1;">
+                        <ul>
+                            <li>
+                                <text></text>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button style="background-color:#375E84 " type="button" id="comp-ok-btn" class="btn btn-primary">
+                        确认删除
+                    </button>
+                    <button type="button" id="comp-cancel-btn" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 修改子部件 -->
+    <div class="modal fade" id="mod-modal" tabindex="3" role="dialog" aria-labelledby="compModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#375E84 ">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="modModalLabel" style="color: white">
+                    </h4>
+                </div>
+                <div class="modal-body ">
+                    <ul>
+                        <li>
+                            <text> 名称：</text>
+                            <input type="text" name="name" id="mod-modal-name" placeholder="参考模型" required="required"
+                                   style="width: 300px;">
+                        </li>
+
+                        <li>
+                            <text> 说明：</text>
+                            <input type="text" name="note" id="mod-modal-note" placeholder="这是一个参考模型"
+                                   style="width: 300px;">
+                        </li>
+                        <br>
+                        <li>
+                            <text> 打印时间 (小时）：</text>
+                            <input type="text" name="time_cost" id="mod-modal-time-cost" min=0
+                                   pattern="[0-9]+(.[0-9]{1,3})?" placeholder="从上传的文件中读取" readonly="readonly">
+                        </li>
+
+                        <li>
+                            <text> 耗费材料（克）：</text>
+                            <input type="text" name="material_cost" id="mod-modal-mat-cost" min=0
+                                   pattern="[0-9]+(.[0-9]{1,3})?" placeholder="从上传的文件中读取"
+                                   readonly="readonly">
+                        </li>
+                        <br>
+                        <li>
+                            <text> 宽度（X）(毫米)：</text>
+                            <input type="text" name="width" id="mod-modal-width" min=0 pattern="[0-9]+(.[0-9]{1,3})?"
+                                   placeholder="从上传的文件中读取" readonly="readonly">
+                        </li>
+
+                        <li>
+                            <text> 深度（Y）(毫米)：</text>
+                            <input type="text" name="depth" id="mod-modal-depth" min=0 pattern="[0-9]+(.[0-9]{1,3})?"
+                                   placeholder="从上传的文件中读取" readonly="readonly">
+                        </li>
+
+                        <li>
+                            <text> 高度（Z）(毫米)：</text>
+                            <input type="text" name="height" id="mod-modal-height" min=0 pattern="[0-9]+(.[0-9]{1,3})?"
+                                   placeholder="从上传的文件中读取" readonly="readonly">
+                        </li>
+                        <li>
+                            <text> bnst：</text>
+                            <form id="uploadForm" enctype="multipart/form-data">
+                                <input id="selectGcodeFile" name="file" type="file" required="required" accept=".bnst">
+                                <input type="button" name="gcode" value="更新" id="gcodeUploadBtn">
+                            </form>
+                            <div class="progress progress-striped active" id="progressBar">
+                                <div id="progressTips" class="progress-bar progress-bar-info" role="progressbar"
+                                     aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: 100%">
+                                    <span class="sr-only"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <br>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button style="background-color:#375E84 " id="mod-btn" type="button" class="btn btn-primary">
+                        提交更改
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加子部件 -->
+    <div class="modal fade" id="add-modal" tabindex="3" role="dialog" aria-labelledby="addModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color:#375E84 ">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="addModalLabel" style="color: white">
+                        添加子部件
+                    </h4>
+                </div>
+                <div class="modal-body ">
+                    <ul>
+                        <form id="addForm" enctype="multipart/form-data">
+                            <li>
+                                <text> 名称：</text>
+                                <input type="text" name="name" id="add-modal-name" placeholder="子部件名称"
+                                       required="required" style="width: 300px;">
+                            </li>
+
+                            <li>
+                                <text> 说明：</text>
+                                <input type="text" name="note" id="add-modal-note" placeholder="子部件简述"
+                                       style="width: 300px;">
+                            </li>
+                            <br>
+                            <li>
+                                <text> 缩略图：</text>
+                                <input id="addthumbnail" name="thumbnail" type="file" required="required"
+                                       accept="image/png, image/jpeg">
+                                <img src="/images/uploadPhotos.png" id="add-thumbnail-image"
+                                     style="height: 72px;width:72px">
+                            </li>
+                            <li>
+                                <text> 打印时间 (小时）：</text>
+                                <input type="text" name="time_cost" id="add-modal-time-cost" min=0
+                                       pattern="[0-9]+(.[0-9]{1,3})?" placeholder="从上传的文件中读取" readonly="readonly">
+                            </li>
+
+                            <li>
+                                <text> 耗费材料（克）：</text>
+                                <input type="text" name="material_cost" id="add-modal-mat-cost" placeholder="从上传的文件中读取"
+                                       min=0 pattern="[0-9]+(.[0-9]{1,3})?"
+                                       readonly="readonly">
+                            </li>
+                            <br>
+                            <li>
+                                <text> 宽度（X）(毫米)：</text>
+                                <input type="text" name="width" id="add-modal-width" min=0 placeholder="从上传的文件中读取"
+                                       pattern="[0-9]+(.[0-9]{1,3})?" readonly="readonly">
+                            </li>
+
+                            <li>
+                                <text> 深度（Y）(毫米)：</text>
+                                <input type="text" name="depth" id="add-modal-depth" min=0 placeholder="从上传的文件中读取"
+                                       pattern="[0-9]+(.[0-9]{1,3})?" readonly="readonly">
+                            </li>
+
+                            <li>
+                                <text> 高度（Z）(毫米)：</text>
+                                <input type="text" name="height" id="add-modal-height" min=0 placeholder="从上传的文件中读取"
+                                       pattern="[0-9]+(.[0-9]{1,3})?" readonly="readonly">
+                            </li>
+                        </form>
+
+                        <li>
+                            <text> bnst：</text>
+                            <form id="addgcodeForm" enctype="multipart/form-data">
+                                <input id="addgcodeFile" name="file" type="file" required="required" accept=".bnst">
+                                <input type="button" name="gcode" value="上传" id="gcodeUploadaddBtn">
+                            </form>
+                        </li>
+
+                        <br>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button style="background-color:#375E84 " id="add-btn" type="button" class="btn btn-primary">
+                        提交添加
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+</body>
+</html>

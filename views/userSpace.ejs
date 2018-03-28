@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="cn" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="3D打印后台管理系统管理界面">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" href="/images/logo.png">
+    <link rel="stylesheet" href="/stylesheets/userSpace.css">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+    <script src="/stylesheets/bootstrap.min.js"></script>
+    <script src="/stylesheets/userSpace.js"></script>
+    <title>个人空间管理</title>
+</head>
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">个人空间管理</a>
+        </div>
+        <div class="searchBox">
+            <form>
+                <ul class="nav navbar-nav">
+                    <label class="sr-only" for="name">名称</label>
+                    <input type="text" class="form-control" id="searchModelIn" placeholder="请输入名称" required>
+                </ul>
+                <button id="searchNavBtn" type="button" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+        <div id="switchTipsTitle"><span>选择搜索模式</span>
+        </div>
+        <div id="switchBtn" data-toggle="tooltip" data-placement="bottom" title="选择搜索模式">
+            <span class='tg-list-item'>
+            <input class='tgl tgl-light' id='cb1' type='checkbox'>
+            <label class='tgl-btn' for='cb1'></label>
+            </span>
+        </div>
+        <div id="switchTips"><span>当前模式：<span id="searchStatus">子部件名称</span></span>
+        </div>
+        <button id="returnBtn" type="button" class="btn btn-default">返回模型管理</button>
+    </div>
+</nav>
+
+
+<div class="centerFather">
+    <p>查询条件：<span id="searchSpan">无</span>，共有<span id="resultNum"></span>条符合结果</p>
+    <div id="modelResultBox"></div>
+</div>
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="delModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    确认删除
+                </h4>
+            </div>
+            <div class="modal-body" id="delInfo">
+                <img class="delImage">
+                你确认删除这个子部件吗？
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button id="delConfirmBtn" type="button" class="btn btn-primary">
+                    确认
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    子部件详情展示
+                </h4>
+            </div>
+            <div class="modal-body">
+                <li>
+                    <text class="model-property">缩略图：</text>
+                    <img class="img-modal" style="width: 80px;height: 60px">
+                </li>
+                <li>
+                    <text class="model-property">子部件名称：</text>
+                    <text id="compName" class="model-value"></text>
+                </li>
+
+                <li>
+                    <text class="model-property">模型说明：</text>
+                    <text id="compNote" class="model-value"></text>
+                </li>
+                <li>
+                    <text class="model-property">打印时间：</text>
+                    <text id="timeCost" class="model-value"></text>
+                </li>
+                <li>
+                    <text class="model-property">耗费材料：</text>
+                    <text id="materialCost" class="model-value"></text>
+                </li>
+                <li class="thirdlayout">
+                    <text class="model-property">宽度（X）：</text>
+                    <text id="compWidth" class="model-value"></text>
+                </li>
+
+                <li class="thirdlayout">
+                    <text class="model-property">深度（Y）：</text>
+                    <text id="compDepth" class="model-value"></text>
+                </li>
+
+                <li class="thirdlayout">
+                    <text class="model-property">高度（Z）：</text>
+                    <text id="compHeight" class="model-value"></text>
+                </li>
+                <li class="thirdlayout">
+                    <text class="model-property">bnst文件：</text>
+                    <text><a id="gcodeFileModal" href="#" target='_Blank'>预览</a>
+                    </text>
+                </li>
+
+                <li class="thirdlayout">
+                    <text class="model-property">打印次数：</text>
+                    <text id="printTimesModal" class="model-value"></text>
+                </li>
+                <li>
+                    <text class="model-property">建立时间：</text>
+                    <text id="createTimeModal" class="model-value"></text>
+                </li>
+                <li>
+                    <text class="model-property">更新时间：</text>
+                    <text id="updateTimeModal" class="model-value"></text>
+                </li>
+
+                <li>
+                    <text class="model-property">描述照片：</text>
+                    <div id="modal-img-desc" style="display: inline-block"></div>
+                </li>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+<body>
+</body>
+</html>

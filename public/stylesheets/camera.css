@@ -1,0 +1,55 @@
+blockquote, body, button, dd, dl, dt, fieldset, form, h1, h2, h3, h4, h5, h6, hr, input, legend, li, ol, p, pre, td, textarea, th, ul, img, div {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 12px;
+    color: #d3d3d3;
+}
+.cameraThAction{
+    text-align: center;
+    width: 100px;
+}
+.cameraTh{
+    width: 200px;
+    text-align: center;
+
+}
+
+#returnBtn{
+    position: absolute;
+    right: 20px;
+    margin-top: 10px;
+}
+#tableBox {
+    text-align: center;
+    display: inline-block;
+    margin-left:1rem;
+}
+
+#printerTable {
+    text-align: center;
+    width: 50rem;
+    font-size: 1rem;
+    border: solid 0.2rem;
+
+}
+
+th {
+    border: solid 0.2rem;
+    border-color: #EEEEEE;
+    text-align: center;
+    height:2rem;
+
+}
+
+td {
+    text-align: center;
+    height:2rem;
+    border: solid 0.2rem;
+    border-color: #EEEEEE;
+}
+a{
+    cursor: pointer;
+}

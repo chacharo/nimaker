@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="cn">
+ 
+<head>
+    <meta charset="utf-8">
+    <title>3D打印后台管理系统登录界面</title>
+    <meta name="description" content="3D打印后台管理系统登录界面">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/login_style.css" />
+    <link rel="shortcut icon" href="/images/logo.png" />
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery.blockUI/2.70.0-2014.11.23/jquery.blockUI.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            if (<%= errCode != null %>) {
+                var notification;
+                switch(<%= errCode %>) {
+                    case 1: 
+                        notification = "用户名为空";
+                        break;
+                    case 2:
+                        notification = "密码为空";
+                        break;
+                    case 3:
+                        notification = "此用户不是管理员";
+                        break;
+                    case 210:
+                        notification = "用户名和密码不匹配";
+                        break;
+
+                    case 211:
+                        notification = "不存在的用户名";
+                        break;
+
+                    default:
+                        notification = "未知错误";
+                }
+
+                $.blockUI({
+                    message: notification,
+                    css: {
+                        "top": "40%",
+                        "height": "50px",
+                        "line-height": "50px"
+                    }
+                });
+                setTimeout($.unblockUI, 1200);
+            }
+                
+        });
+    </script>
+</head>
+ 
+<body>
+    
+    <form id="slick-login" method="POST" action="/users/login">
+        <label for="username" id="username">用户名</label><input type="text" name="username" class="placeholder" placeholder="用户名">
+        <label for="password">密码</label><input type="password" name="password" class="placeholder" placeholder="密码">
+        <input type="submit" value="登录">
+    </form>
+
+
+</body>
+ 
+</html>

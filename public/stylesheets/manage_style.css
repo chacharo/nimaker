@@ -1,0 +1,357 @@
+html, body {
+    font-family: "Lato", "Geneva CY", "Lucida Grande", "Arial Unicode MS", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+body {
+    color: #262626;
+    font-size: 14px;
+    font-weight: 500;
+
+    height: 100vh;
+    width: 100vw;
+
+    overflow: hidden;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    text-rendering: optimizeLegibility;
+}
+
+a, a:hover, tr, tr:hover {
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+td, td:hover {
+    text-decoration: none;
+}
+
+.header {
+    height: 54px;
+    padding-left: 27px;
+
+    color: white;
+    background-color: #375E84;
+
+    font-size: 24px;
+    line-height: 54px;
+}
+
+.main-interface {
+    position: absolute;
+    top: 54px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+
+    display: flex;
+
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+#left {
+    width: 300px;
+
+    display: flex;
+    display: -webkit-flex;
+
+    flex-direction: column;
+    flex-wrap: nowrap;
+
+    color: white;
+    background-color: #375E84;
+
+}
+
+#left a {
+    color: white;
+}
+
+/*用户信息布局*/
+#user-info {
+    height: 100px;
+    overflow-y: auto;
+
+    padding: 10px 20px 10px 20px;
+
+    border-style: groove;
+    border-width: 1px 0px thin 0px;
+    border-color: white;
+}
+
+/*目录列表布局*/
+#category-list {
+    flex: 4;
+    overflow-y: auto;
+
+    padding: 42px 0px 0px 10px;
+}
+
+#category-list .category-item {
+    height: 45px;
+
+    line-height: 45px;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#category-list .category-item a {
+    display: block;
+    width: 100%;
+    font-size: 24px;
+}
+
+#category-list .category-item img {
+    padding-left: 10px;
+}
+
+#category-list .category-item:hover {
+    background-color: #61809E;
+}
+
+/*模型列表布局*/
+#model-list {
+    display: flex;
+    flex-direction: column;
+
+    flex: 2;
+    background-color: white;
+
+}
+
+#category-header {
+    height: 72px;
+    line-height: 72px;
+    background-color: #EEF5F9;
+    margin: 10px 10px 0px 10px;
+    overflow-y: hidden;
+}
+
+#list-interface {
+    flex: 1;
+    margin: 0px 10px 0px 10px;
+    overflow-y: auto;
+}
+
+#model-list .model-item {
+    height: 72px;
+    background-color: #EEF5F9;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+
+}
+
+#model-list .model-item img {
+    max-width:72px;
+    height: 100%;
+}
+
+#model-list .modify-icon {
+    display: block;
+    height: 72px;
+    width: 50px;
+    color: blue;
+    font-size: 16px;
+    line-height: 72px;
+    text-align: center;
+}
+
+#model-list .rm-model-icon {
+    display: block;
+    height: 72px;
+    width: 50px;
+    color: red;
+    font-size: 16px;
+    line-height: 72px;
+    text-align: center;
+}
+
+/*模型细节布局*/
+#model-detail {
+    flex: 1;
+    max-width: 300px;
+    min-width: 100px;
+    padding: 10px 10px 10px 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    background-color: #EEEEEE;
+}
+
+#model-detail li {
+    padding-bottom: 10px;
+}
+
+#model-detail img {
+    width: 150px;
+    max-width: 250px;
+}
+
+#model-detail .model-property {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#model-detail .model-value {
+    font-size: 16px;
+}
+
+#add-category,
+#mod-category,
+#add-model,
+#mod-model,
+#rm-confirm-dialog {
+    display: none;
+    cursor: default;
+}
+
+.dialog-header {
+    text-align: left;
+    padding-left: 20px;
+
+    height: 50px;
+    line-height: 50px;
+    font-size: 24px;
+    color: white;
+    background-color: #375E84;
+}
+
+.dialog-content {
+    text-align: left;
+    padding: 20px;
+    font-size: 18px;
+}
+
+.dialog-content [type="text"] {
+    width: 200px;
+    border-color: blue;
+    border-width: 0px 0px 2px 0px;
+    font-size: 16px;
+}
+
+.ok, .cancel {
+    float: right;
+    margin-left: 32px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #4093BC;
+    border-width: 0px;
+    background-color: white;
+}
+
+.ok:hover, .cancel:hover {
+    cursor: pointer;
+}
+
+#full-image {
+    display: none;
+    cursor: default;
+    height: 500px;
+}
+
+.ThirdLink {
+    color: black;
+}
+
+.ThirdLink:hover {
+    color: black;
+    background-color: #BAD8E7;
+
+}
+
+.con3-item {
+    height: 72px;
+    background-color: #EEF5F9;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+}
+
+.modify-icon-third {
+    display: block;
+    height: 72px;
+    width: 50px;
+    color: blue;
+    font-size: 16px;
+    line-height: 72px;
+    text-align: center;
+}
+
+#comp-rm-confirm-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+#mod-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 70%;
+    -webkit-transform: translateX(-50%) translateY(-50%);
+    -moz-transform: translateX(-50%) translateY(-50%);
+    -ms-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.modal-body [type="text"] {
+    width: 200px;
+    border-color: blue;
+    border-width: 0px 0px 2px 0px;
+    font-size: 16px;
+}
+
+#sortInfo {
+    color: #4093BC;
+}
+
+#pageBox {
+    display: inline-block;
+    position: absolute;
+    left: 300px;
+}
+
+#progressTips {
+    animation: upload-bar 2s;
+}
+
+@keyframes upload-bar {
+
+    0% {
+        width: 0%;
+        opacity: 1;
+    }
+    50% {
+        width: 50%;
+        opacity: 1;
+
+    }
+    100% {
+        width: 100%;
+        opacity: 1;
+
+    }
+}
+
