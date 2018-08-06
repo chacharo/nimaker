@@ -302,7 +302,7 @@ function gcodeModify(cateIndex3, modelIndex3, compIndex3, compObjectId) {
                                 width = line.substring(beginIndex2);
                                 field_num++
                             }
-                            if (line.search('code_filament_amount') != -1) {
+                            if (line.search('code_filament_weight') != -1) {
                                 var beginIndex3 = line.search('=') + 1;
                                 mcost = line.substring(beginIndex3);
                                 field_num++
@@ -427,7 +427,7 @@ function gcodeAdd() {
                                     width = line.substring(beginIndex2);
                                     field_num++
                                 }
-                                if (line.search('code_filament_amount') != -1) {
+                                if (line.search('code_filament_weight') != -1) {
                                     var beginIndex3 = line.search('=') + 1;
                                     mcost = line.substring(beginIndex3);
                                     field_num++
