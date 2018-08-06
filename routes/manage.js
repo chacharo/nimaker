@@ -911,7 +911,7 @@ router.post('/addphoto/:index1/:index2/add-photo', function(req, res, next) {
                             query1.descending('createdAt');
                             query1.find().then(function(result1) {
                                 global_data.model_list = result1;
-                                res.redirect('/manage/init/manage?category_index' + category_index + '&model_index=' + model_index);
+                                res.redirect('/manage?category_index=' + category_index + '&model_index=' + model_index);
                             }, function(err) {});
                         }, function(err) {});
                     }, function(err) {
