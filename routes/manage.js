@@ -879,8 +879,53 @@ router.post('/add-edu-model/:index', function(req, res, next) {
     }
 });
 
-
 // 添加具体描述照片,这里应该由于加了三级菜单应该分开，二级菜单图片修改
+router.post('/addphoto/:index1/:index2/add-photo', function(req, res, next) {
+    var currentUser = AV.User.current();
+    if (currentUser) {
+        var category_index = req.params.index1;
+        var model_index = req.params.index2;
+        var form = new formidable.IncomingForm();
+        form.parse(req, function(err, fields, files) {
+            //fs.readFile异步读取数据
+            fs.readFile(files.photo.path, function(err, data) {
+                var base64Data = data.toString('base64');
+                var file = new AV.File(files.photo.name, { base64: base64Data });
+                file.save().then(function(theFile) {
+                    var model = AV.Object.createWithoutData('models', global_data.model_list[model_index].get('objectId'));
+                    var photo = {
+                        id: theFile.get('objectId'),
+                        name: theFile.get('name'),
+                        url: theFile.get('url')
+                    };
+                    model.add('description', photo);
+                    model.save().then(function(success) {
+                        //成功以后的回调重新查询
+                        var query = new AV.Query('category');
+                        query.descending('createdAt');
+                        query.find().then(function(results) {
+                            global_data.category_list = results;
+                            var obj1 = AV.Object.createWithoutData('category', global_data.category_list[category_index].get('objectId'));
+                            var query1 = new AV.Query("models");
+                            query1.equalTo('category', obj1);
+                            query1.descending('createdAt');
+                            query1.find().then(function(result1) {
+                                global_data.model_list = result1;
+                                res.redirect('/manage/init/manage?category_index' + category_index + '&model_index=' + model_index);
+                            }, function(err) {});
+                        }, function(err) {});
+                    }, function(err) {
+
+                    })
+                });
+            });
+        });
+    } else {
+        res.redirect('/users/login');
+    }
+});
+
+// 添加edu具体描述照片,这里应该由于加了三级菜单应该分开，二级菜单图片修改
 router.post('/eduaddphoto/:index1/:index2/add-photo', function(req, res, next) {
     var currentUser = AV.User.current();
     if (currentUser) {

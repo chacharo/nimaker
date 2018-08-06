@@ -226,8 +226,8 @@ function writeInfo(data, compIndex) {
     $("#printTimes").html("" + data[compIndex].print_times);
     $("#createTime").html(date1.toLocaleString("chinese", { hour12: false }));
     $("#updateTime").html(date2.toLocaleString("chinese", { hour12: false }));
-    if (data[compIndex].thumbnail.url != undefined) {
-        $("#conpImg").attr("src", "" + data[compIndex].thumbnail.url);
+    if (data[compIndex].thumbnail.url != undefined) {       
+		$("#conpImg").attr("src", "" + data[compIndex].thumbnail.url);
     }
 }
 

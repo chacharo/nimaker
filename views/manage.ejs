@@ -488,10 +488,8 @@
                 <% } %>
                 <!-- <li><a href=""><img src="/images/uploadPhotos.png"></li></a> -->
 
-                <form action="/manage/<%= category_index %>/<%= model_index %>/add-photo" method="post"
-                      enctype="multipart/form-data">
-                    <input name="photo" type="file" id="upload-description-input" accept="image/png, image/jpeg"
-                           required="required">
+                <form action="/manage/addphoto/<%= category_index %>/<%= model_index %>/add-photo" method="post" enctype="multipart/form-data">
+                    <input name="photo" type="file" id="upload-description-input" accept="image/png, image/jpeg" required="required">
                     <br>
                     <input type="submit" value="添加照片">
                 </form>
